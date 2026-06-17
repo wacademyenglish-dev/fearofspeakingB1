@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>WOLF LABS | The Neural Override (B1+)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Fonts: Orbitron (Headers), Share Tech Mono (UI/Logs), Inter (Reading) -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* */
+        :root {
+            --bg-void: #09090b;        /* Zinc 950 (Ultra dark) */
+            --bg-panel: #18181b;       /* Zinc 900 */
+            --bg-paper: #27272a;       /* Zinc 800 */
+            --accent-cyan: #06b6d4;    /* Cyber Cyan */
+            --accent-purple: #a855f7;  /* Neon Purple */
+            --accent-virus: #e11d48;   /* Rose/Blood Red */
+            --text-main: #f4f4f5;      
+            --text-muted: #a1a1aa;     
+            --text-dark: #09090b;      
+            --glow-cyan: 0 0 20px rgba(6, 182, 212, 0.4);
+            --glow-virus: 0 0 25px rgba(225, 29, 72, 0.5);
+            --shadow-noir: 0 20px 40px rgba(0,0,0,0.9);
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--bg-void);
+            color: var(--text-main);
+            overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
+            background-image: 
+                linear-gradient(rgba(6, 182, 212, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(6, 182, 212, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            background-position: center center;
+            transition: background-color 0.5s ease;
+        }
+
+        /* The IMMERSIVE SHIFT (Fear Virus Attack) */
+        body.immersive-shift {
+            background-color: #1a0505;
+            background-image: 
+                linear-gradient(rgba(225, 29, 72, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(225, 29, 72, 0.05) 1px, transparent 1px);
+            animation: glitchBg 0.3s infinite alternate;
+        }
+
+        @keyframes glitchBg {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(10deg); transform: translate(1px, 1px); }
+        }
+
+        h1, h2, h3, .font-epic { font-family: 'Orbitron', sans-serif; letter-spacing: 1px; text-transform: uppercase; }
+        .font-mono { font-family: 'Share Tech Mono', monospace; }
+
+        /* HUD TOP */
+        #hud-top {
+            position: fixed; top: 0; left: 0; right: 0; padding: 15px 30px;
+            background: rgba(24, 24, 27, 0.9);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(6, 182, 212, 0.3);
+            z-index: 1000; box-shadow: 0 4px 30px rgba(0,0,0,0.8);
+        }
+        .immersive-shift #hud-top { border-bottom-color: var(--accent-virus); }
+        .hud-bar-container { width: 120px; height: 6px; background: rgba(255,255,255,0.05); border-radius: 2px; overflow: hidden; border: 1px solid rgba(6, 182, 212, 0.2);}
+        .hud-bar-fill { height: 100%; transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 0 10px currentColor;}
+
+        /* CONTENT ARENA */
+        #mission-arena { height: 100vh; padding-bottom: 120px; padding-top: 60px; }
+
+        /* */
+        /* CYBER PANELS (Cards) */
+        .cyber-card {
+            background-color: var(--bg-panel); border-radius: 4px; padding: 3rem;
+            box-shadow: var(--shadow-noir); position: relative;
+            border: 1px solid rgba(6, 182, 212, 0.2);
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%);
+        }
+        .immersive-shift .cyber-card { border-color: rgba(225, 29, 72, 0.4); box-shadow: inset 0 0 20px rgba(225, 29, 72, 0.1), 0 10px 30px rgba(0,0,0,0.8); }
+
+        /* BUTTONS */
+        .btn-cyan {
+            background: rgba(6, 182, 212, 0.1); color: var(--accent-cyan); border-radius: 2px;
+            font-family: 'Share Tech Mono', monospace; font-size: 1.1rem; text-transform: uppercase;
+            letter-spacing: 0.1em; transition: all 0.2s ease; border: 1px solid var(--accent-cyan); cursor: pointer;
+            box-shadow: var(--glow-cyan);
+        }
+        .btn-cyan:hover { background: var(--accent-cyan); color: var(--bg-void); text-shadow: 0 0 5px rgba(255,255,255,0.8); transform: translateY(-2px);}
+        .btn-cyan:active { transform: scale(0.96); }
+
+        .btn-virus {
+            background: rgba(225, 29, 72, 0.1); color: var(--accent-virus); border-radius: 2px;
+            font-family: 'Share Tech Mono', monospace; font-size: 1.1rem; text-transform: uppercase;
+            letter-spacing: 0.1em; transition: all 0.2s ease; border: 1px solid var(--accent-virus); cursor: pointer;
+            box-shadow: var(--glow-virus);
+        }
+        .btn-virus:hover { background: var(--accent-virus); color: var(--text-main); transform: translateY(-2px);}
+
+        /* SLIDER */
+        input[type=range].cute-slider { -webkit-appearance: none; width: 100%; background: transparent; }
+        input[type=range].cute-slider::-webkit-slider-runnable-track { width: 100%; height: 6px; cursor: pointer; background: var(--bg-paper); border-radius: 2px; border: 1px solid rgba(6,182,212,0.3);}
+        input[type=range].cute-slider::-webkit-slider-thumb { -webkit-appearance: none; height: 24px; width: 12px; border-radius: 2px; background: var(--accent-cyan); cursor: pointer; margin-top: -10px; box-shadow: var(--glow-cyan); transition: transform 0.2s; border: 1px solid #fff; }
+
+        /* POLAROID / CARDS */
+        .polaroid-card { perspective: 1000px; cursor: pointer; }
+        .polaroid-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; }
+        .polaroid-card.flipped .polaroid-inner { transform: rotateY(180deg); }
+        .polaroid-front, .polaroid-back {
+            position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1.5rem;
+            background-color: var(--bg-paper); border-radius: 4px; box-shadow: 0 10px 25px rgba(0,0,0,0.6); border: 1px solid rgba(6,182,212,0.3);
+        }
+        .polaroid-back { background: var(--bg-panel); border-color: var(--accent-cyan); color: var(--accent-cyan); transform: rotateY(180deg); }
+
+        /* */
+        /* VOCAB MATCH */
+        .vocab-word {
+            background-color: var(--bg-void); border: 1px solid var(--text-muted); color: var(--text-main); padding: 0.75rem 1.5rem;
+            font-family: 'Share Tech Mono', monospace; font-weight: bold; text-transform: uppercase; letter-spacing: 0.1em;
+            cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.5); transition: all 0.2s ease; user-select: none;
+        }
+        .vocab-word:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); box-shadow: var(--glow-cyan); transform: translateY(-2px); }
+        .vocab-word.dragging { opacity: 0.5; transform: scale(1.05); }
+        .vocab-dropzone.drag-over { background-color: rgba(6, 182, 212, 0.1); border-color: var(--accent-cyan); }
+
+        /* THE DECODER (Typewriter) */
+        .type-key { background-color: var(--bg-void); min-width: 50px; padding: 0 15px; height: 50px; border-radius: 4px; font-weight: 700; cursor: pointer; transition: all 0.1s; display: flex; align-items: center; justify-content: center; border: 1px solid var(--text-muted); color: var(--text-main); font-family: 'Share Tech Mono', monospace; font-size: 1.2rem;}
+        .type-key:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); box-shadow: var(--glow-cyan); background: rgba(6, 182, 212, 0.1);}
+        .type-key.used { opacity: 0; pointer-events: none; transform: scale(0.5); }
+        .type-paper { min-height: 100px; background: rgba(0,0,0,0.5); border-radius: 4px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: flex-start; padding: 20px; width: 100%; max-width: 800px; margin: 0 auto; box-shadow: inset 0 2px 10px rgba(0,0,0,0.8); font-family: 'Share Tech Mono', monospace; border-top: 2px solid var(--accent-cyan);}
+        .type-word { color: var(--accent-cyan); font-size: 1.5rem; font-weight: 700; cursor: default; animation: typeIn 0.1s ease; text-shadow: var(--glow-cyan);}
+
+        /* THE ROULETTE (NEW) */
+        .roulette-container { position: relative; width: 100%; max-width: 600px; margin: 0 auto; background: var(--bg-paper); border: 2px solid var(--accent-cyan); border-radius: 8px; overflow: hidden; box-shadow: var(--glow-cyan); }
+        .roulette-window { height: 120px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-family: 'Share Tech Mono', monospace; color: var(--text-main); text-align: center; padding: 1rem; position: relative; }
+        .roulette-text { position: absolute; width: 100%; text-align: center; transition: top 0.1s linear; }
+        .roulette-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, var(--bg-paper) 0%, transparent 20%, transparent 80%, var(--bg-paper) 100%); pointer-events: none; }
+        .spin-btn { width: 100%; padding: 1rem; background: rgba(6, 182, 212, 0.2); color: var(--accent-cyan); font-family: 'Orbitron', sans-serif; font-weight: bold; text-transform: uppercase; cursor: pointer; transition: all 0.3s; border-top: 1px solid var(--accent-cyan); }
+        .spin-btn:hover { background: var(--accent-cyan); color: var(--bg-void); }
+
+        /* THE ALIBI SHIFT (Tuner Toggle) */
+        .tuner-checkbox:checked + .tuner-label { background-color: var(--accent-cyan); border-color: var(--accent-cyan); }
+        .tuner-checkbox:checked + .tuner-label .tuner-knob { transform: translateX(100%); background-color: var(--bg-void); box-shadow: -2px 0 5px rgba(0,0,0,0.3);}
+        .tuner-checkbox:not(:checked) + .tuner-label { background-color: var(--bg-paper); border-color: var(--text-muted); }
+        .tuner-checkbox:not(:checked) + .tuner-label .tuner-knob { background-color: var(--text-main); box-shadow: 2px 0 5px rgba(0,0,0,0.3);}
+
+        /* */
+        /* MCQ DATA ROWS */
+        .mcq-row { background: var(--bg-paper); border: 1px solid rgba(255,255,255,0.05); border-radius: 4px; transition: all 0.2s ease; cursor: pointer; display: flex; align-items: center; padding: 1.2rem 1.5rem; box-shadow: 0 4px 10px rgba(0,0,0,0.2); font-family: 'Share Tech Mono', monospace; font-size: 1.2rem; }
+        .mcq-row:hover:not(.locked-check) { border-color: var(--accent-cyan); transform: translateX(5px); background: rgba(6, 182, 212, 0.1); }
+        .mcq-row.correct { background: rgba(16, 185, 129, 0.1); border-color: #10b981; color: #10b981; }
+        .mcq-row.wrong { background: rgba(225, 29, 72, 0.1); border-color: var(--accent-virus); color: var(--accent-virus); }
+
+        /* THE FIXER (Redacted Notes) */
+        .redacted-word { background-color: var(--text-main); color: var(--text-main); cursor: pointer; transition: all 0.2s; padding: 0 6px; border-radius: 2px; }
+        .redacted-word:hover { background-color: var(--accent-cyan); color: var(--bg-void); }
+        .redacted-fixed { background-color: transparent; color: var(--accent-cyan); pointer-events: none; border-bottom: 2px dashed var(--accent-cyan); font-weight: bold;}
+
+        /* SPEAKING STARTERS */
+        .starter-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; opacity: 0; }
+        .starter-content.open { max-height: 300px; opacity: 1; margin-top: 1.5rem; }
+
+        /* FOOTER CONSOLE */
+        #nav-console {
+            position: fixed; bottom: 0; left: 0; width: 100%; height: 70px;
+            background: rgba(24, 24, 27, 0.95); border-top: 1px solid rgba(6, 182, 212, 0.2);
+            display: flex; justify-content: space-between; align-items: center; padding: 0 30px; z-index: 5000; box-shadow: 0 -10px 30px rgba(0,0,0,0.8);
+        }
+
+        /* DRAWERS */
+        .drawer { background: var(--bg-panel); color: var(--text-main); border-left: 1px solid var(--accent-cyan); transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1); z-index: 5100; box-shadow: -20px 0 50px rgba(0,0,0,0.9);}
+        .drawer.active { transform: translateX(0); }
+
+        .fade-in { animation: fadeIn 0.4s ease forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: var(--bg-paper); border-radius: 4px; }
+        ::-webkit-scrollbar-track { background: var(--bg-void); }
+
+        #confetti-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 9999; }
+        .shake { animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
+        @keyframes shake { 10%, 90% { transform: translate3d(-2px, 0, 0); } 20%, 80% { transform: translate3d(3px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-5px, 0, 0); } 40%, 60% { transform: translate3d(5px, 0, 0); } }
+    </style>
+</head>
+<body class="flex flex-col h-screen overflow-hidden text-base">
+
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- -->
+    <div id="hud-top" class="hidden justify-between items-center w-full">
+        <div class="flex items-center gap-10">
+            <div class="flex flex-col gap-1">
+                <span class="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest font-mono">Mental Bandwidth (HP)</span>
+                <div class="hud-bar-container"><div id="hp-bar" class="hud-bar-fill bg-[var(--accent-cyan)]" style="width: 100%;"></div></div>
+            </div>
+            <div class="flex flex-col gap-1">
+                <span class="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest font-mono">Override Logic (XP)</span>
+                <div class="hud-bar-container"><div id="xp-bar" class="hud-bar-fill bg-[var(--accent-purple)]" style="width: 0%;"></div></div>
+            </div>
+        </div>
+        <div class="text-right flex items-center gap-6">
+            <button onclick="toggleTeacherHUD()" class="px-4 py-1.5 bg-transparent border border-white/20 rounded text-[10px] uppercase tracking-widest text-[var(--text-muted)] hover:text-white hover:border-white transition-all font-bold font-mono"><i class="fas fa-terminal mr-2"></i>Operator</button>
+            <div>
+                <p class="font-epic text-xl font-black text-[var(--accent-cyan)] tracking-widest leading-none uppercase">WOLF LABS</p>
+                <p class="text-[9px] font-bold text-gray-500 tracking-[0.3em] uppercase mt-1 font-mono">Neural Dept / B1</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN DASHBOARD -->
+    <main id="dashboard" class="flex flex-col items-center relative px-8 pt-16 pb-48 z-10 w-full h-screen overflow-y-auto">
+        <button onclick="toggleFullscreen()" class="absolute top-6 right-8 text-gray-600 hover:text-[var(--accent-cyan)] text-2xl z-50 transition-colors" title="Fullscreen"><i class="fas fa-expand"></i></button>
+        <div class="max-w-4xl w-full flex flex-col items-center text-center space-y-6 animate-in fade-in my-auto pb-10">
+            
+            <div class="cyber-card p-6 mb-4 mt-10 inline-block border-t-4 border-[var(--accent-cyan)] shadow-[0_0_50px_rgba(6,182,212,0.15)]">
+                <div class="w-32 h-32 bg-[var(--bg-void)] rounded-sm flex items-center justify-center overflow-hidden border border-gray-700 shadow-inner">
+                    <i class="fas fa-brain text-6xl text-[var(--accent-cyan)] opacity-80"></i>
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                <p class="text-[var(--accent-cyan)] font-bold text-sm tracking-[0.5em] uppercase font-mono border border-[var(--accent-cyan)]/30 px-5 py-2 rounded-sm bg-[var(--accent-cyan)]/5 shadow-sm inline-block">Neural Override Protocol</p>
+                <h1 class="text-6xl md:text-8xl font-black text-[var(--text-main)] leading-none tracking-tight font-epic uppercase drop-shadow-md">SPEAKING <br> <span class="text-[var(--accent-virus)] italic">ANXIETY</span></h1>
+                <p class="text-xl text-[var(--text-muted)] font-medium mt-6 max-w-2xl mx-auto">A virus called 'Perfectionism' is blocking your communication. Master Modals of Advice and the First Conditional to hack your own brain and speak fluently.</p>
+            </div>
+            
+            <div class="flex flex-wrap justify-center gap-3 font-mono mt-4">
+                <span class="px-4 py-1.5 bg-[var(--bg-paper)] border border-gray-600 text-[10px] font-bold uppercase tracking-widest text-gray-300 rounded-sm shadow-sm">Overcoming Fear</span>
+                <span class="px-4 py-1.5 bg-cyan-900/20 border border-[var(--accent-cyan)]/30 text-[10px] font-bold uppercase tracking-widest text-[var(--accent-cyan)] rounded-sm shadow-sm">Modals: Should/Must</span>
+                <span class="px-4 py-1.5 bg-purple-900/20 border border-[var(--accent-purple)]/30 text-[10px] font-bold uppercase tracking-widest text-[var(--accent-purple)] rounded-sm shadow-sm">1st Conditional</span>
+            </div>
+            
+            <button onclick="startMission()" class="mt-12 btn-cyan px-14 py-5 text-lg mb-10 shadow-[0_0_30px_rgba(6,182,212,0.2)]">
+                Initialize System
+            </button>
+        </div>
+    </main>
+
+    <!-- LESSON ARENA -->
+    <main id="mission-arena" class="hidden flex-grow flex-col overflow-hidden relative mt-16">
+        <div id="mission-content" class="flex-grow overflow-y-auto px-6 py-12 flex flex-col items-center w-full"></div>
+    </main>
+
+    <!-- NAVIGATION CONSOLE -->
+    <footer id="nav-console" class="hidden flex justify-between items-center w-full font-mono">
+        <div class="flex items-center gap-6 w-1/4">
+            <button onclick="goHome()" class="text-gray-500 hover:text-[var(--accent-virus)] transition-colors"><i class="fas fa-power-off text-xl"></i></button>
+            <div class="flex flex-col">
+                <span id="console-title" class="text-[12px] font-bold text-white uppercase tracking-widest truncate">B1+ OVERRIDE</span>
+                <span id="console-type" class="text-[9px] font-bold text-[var(--accent-cyan)] uppercase tracking-widest">Protocol</span>
+            </div>
+        </div>
+        <div class="flex flex-col items-center gap-4 w-1/2">
+            <div class="flex items-center gap-12">
+                <button onclick="prevStep()" class="text-gray-500 hover:text-white transition-colors"><i class="fas fa-chevron-left text-2xl"></i></button>
+                <span id="console-counter" class="text-[10px] font-bold text-gray-400 tracking-[0.4em] uppercase">NODE 01</span>
+                <button onclick="nextStep()" class="text-gray-500 hover:text-[var(--accent-cyan)] transition-all hover:scale-110"><i class="fas fa-chevron-right text-2xl"></i></button>
+            </div>
+            <div class="w-64 h-1 bg-gray-800 overflow-hidden border border-gray-700">
+                <div id="progress-bar" class="h-full bg-[var(--accent-cyan)] transition-all duration-300 shadow-[0_0_10px_rgba(6,182,212,0.8)]" style="width: 0%;"></div>
+            </div>
+        </div>
+        <div class="flex items-center justify-end gap-6 w-1/4">
+            <button onclick="toggleWhiteboard()" class="text-gray-500 hover:text-[var(--accent-cyan)] transition-colors" title="Logs"><i class="fas fa-terminal text-lg"></i></button>
+            <button onclick="toggleFullscreen()" class="text-gray-500 hover:text-white transition-colors" title="Fullscreen"><i class="fas fa-expand text-lg"></i></button>
+            <button onclick="toggleLessonNavigator()" class="text-gray-500 hover:text-[var(--accent-cyan)] transition-colors" title="Index"><i class="fas fa-network-wired text-lg"></i></button>
+        </div>
+    </footer>
+
+    <!-- -->
+    <aside id="whiteboard" class="fixed right-0 top-0 h-screen w-[450px] drawer flex flex-col pt-20 z-[5100]">
+        <div class="p-8 border-b border-gray-700 flex justify-between items-center bg-[var(--bg-void)]">
+            <h2 class="font-mono text-xl font-bold text-white tracking-widest"><i class="fas fa-terminal text-[var(--accent-cyan)] mr-3"></i>Terminal Logs</h2>
+            <button onclick="toggleWhiteboard()" class="text-gray-500 hover:text-white"><i class="fas fa-times text-xl"></i></button>
+        </div>
+        <div class="p-4 bg-[var(--bg-panel)] flex flex-wrap gap-2 border-b border-gray-700 font-mono">
+            <button onclick="insertTag('[OVERRIDE]')" class="text-[10px] bg-[var(--bg-paper)] border border-gray-600 text-gray-300 px-3 py-1.5 rounded-sm hover:bg-[var(--accent-cyan)] hover:text-[var(--bg-void)] transition-all font-bold uppercase tracking-widest shadow-sm">Override</button>
+            <button onclick="insertTag('[VIRUS]')" class="text-[10px] bg-[var(--bg-paper)] border border-gray-600 text-gray-300 px-3 py-1.5 rounded-sm hover:bg-[var(--accent-virus)] hover:text-white transition-all font-bold uppercase tracking-widest shadow-sm">Virus</button>
+        </div>
+        <textarea id="wb-text" class="flex-grow bg-[#131316] text-[var(--accent-cyan)] p-8 resize-none focus:outline-none font-mono text-lg leading-relaxed" placeholder="> system tracking user output..."></textarea>
+    </aside>
+
+    <aside id="lesson-navigator" class="fixed right-0 top-0 h-screen w-80 drawer flex flex-col pt-20 z-[5100]">
+        <div class="p-8 border-b border-gray-700 text-white font-bold uppercase tracking-widest flex justify-between items-center text-sm font-mono bg-[var(--bg-void)]">Node Index <button onclick="toggleLessonNavigator()"><i class="fas fa-times text-gray-500 hover:text-white"></i></button></div>
+        <div id="nav-steps-list" class="flex-grow overflow-y-auto p-4 space-y-2 bg-[var(--bg-panel)] font-mono"></div>
+    </aside>
+
+    <aside id="teacher-hud" class="fixed right-0 top-0 h-screen w-[350px] drawer flex flex-col pt-20 z-[5100]">
+        <div class="p-8 border-b border-gray-700 flex justify-between items-center bg-[var(--bg-void)]">
+            <h2 class="font-mono text-xl font-bold text-[var(--accent-cyan)] tracking-widest uppercase"><i class="fas fa-network-wired mr-2"></i> Operator</h2>
+            <button onclick="toggleTeacherHUD()"><i class="fas fa-times text-xl text-gray-500 hover:text-white"></i></button>
+        </div>
+        <div class="flex-grow overflow-y-auto p-8 space-y-8 bg-[var(--bg-panel)]">
+            <div class="bg-cyan-900/20 p-6 rounded-sm border border-[var(--accent-cyan)]/30 shadow-sm">
+                <p class="text-[10px] font-bold text-[var(--accent-cyan)] uppercase tracking-widest mb-3 font-mono">Mission Goal</p>
+                <p class="text-sm text-gray-300 leading-relaxed font-inter">Get the student to speak CONSTANTLY. Use Modals (should, must) and 1st Conditional to overcome speaking anxiety dilemmas.</p>
+            </div>
+            <div>
+                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4 font-mono">Send Diagnostics</p>
+                <div class="space-y-3 font-mono">
+                    <button onclick="triggerPraise('FIREWALL UP', 'Good logic.')" class="w-full py-4 bg-[var(--bg-paper)] text-[var(--accent-cyan)] border border-gray-600 rounded-sm font-bold text-xs hover:border-[var(--accent-cyan)] hover:text-white transition-all tracking-widest shadow-sm uppercase">SEND: CYAN (GOOD)</button>
+                    <button onclick="triggerPraise('SYSTEM PURGED', 'Perfect fluency.')" class="w-full py-4 bg-[var(--bg-paper)] text-[var(--accent-purple)] border border-gray-600 rounded-sm font-bold text-xs hover:border-[var(--accent-purple)] hover:text-white transition-all tracking-widest shadow-sm uppercase">SEND: PURPLE (GREAT)</button>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Praise Overlay -->
+    <div id="praise-overlay" class="fixed inset-0 z-[6000] flex items-center justify-center bg-black/80 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 p-4">
+        <div id="praise-card" class="cyber-card p-16 text-center transform scale-50 transition-transform duration-500 border-2">
+            <h2 id="praise-main" class="font-epic text-5xl md:text-7xl font-black tracking-widest uppercase mb-4 drop-shadow-md text-[var(--accent-cyan)]"></h2>
+            <p id="praise-sub" class="text-xl font-bold tracking-widest uppercase mt-6 opacity-80 text-white font-mono"></p>
+        </div>
+    </div>
+
+    <!-- -->
+    <script>
+        let state = { hp: 100, xp: 0, current: 0 };
+        const esc = (s) => s ? s.replace(/'/g, "\\'").replace(/"/g, "&quot;") : "";
+        
+        const TYPES = { COVER: "Boot", STORY: "Alert", WARMUP: "Diagnostic", VOCAB: "Data", DISCOVERY: "Scan", GRAMMAR: "Logic", DRILL: "Execute", TUNER: "Shift", BUILDER: "Code", MATCH: "Link", READER: "Feed", SPEAKING: "Comms", WRAP: "Halt" };
+
+        function step(type, title, html) { return { type, title, html }; }
+
+        function updateHUD() {
+            const h = document.getElementById('hp-bar'); if(h) h.style.width = Math.max(0, state.hp) + '%';
+            const x = document.getElementById('xp-bar'); if(x) x.style.width = Math.min(100, (state.xp / 100) * 100) + '%';
+        }
+
+        function insertTag(tag) { 
+            const text = document.getElementById('wb-text'); 
+            if (text) { text.value += (text.value.length > 0 ? '\n' : '') + tag + ' '; text.focus(); } 
+        }
+
+        // --- CYBERPUNK TEMPLATES ---
+
+        const bGuide = (title, points) => step(TYPES.COVER, title, `
+            <div class="max-w-4xl mx-auto space-y-10 animate-in fade-in py-10">
+                <div class="cyber-card border-t-8 border-[var(--accent-cyan)]">
+                    <p class="text-[var(--accent-cyan)] font-bold uppercase tracking-[0.4em] text-[10px] mb-6 flex items-center gap-3 font-mono">
+                        <i class="fas fa-network-wired text-lg"></i> WOLF LABS | Terminal Access
+                    </p>
+                    <h2 class="font-epic text-4xl md:text-5xl font-black text-white tracking-widest leading-none mb-10 pb-8 border-b border-gray-700 uppercase">${title}</h2>
+                    <div class="space-y-6 font-mono">
+                        ${points.map(p => `<p class="text-xl text-[var(--text-main)] font-medium leading-relaxed flex items-start gap-4"><i class="fas fa-angle-right text-[var(--accent-cyan)] text-[16px] mt-1.5 opacity-80"></i> ${p}</p>`).join('')}
+                    </div>
+                </div>
+            </div>
+        `);
+
+        const bPsychTest = (id, title, instruction, statements, questions, starters) => step(TYPES.WARMUP, title, `
+            <div class="max-w-5xl mx-auto flex flex-col items-center py-10 animate-in fade-in" id="psych-container-${id}">
+                <p class="text-[10px] font-bold text-[var(--accent-cyan)] uppercase tracking-[0.4em] mb-4 bg-[var(--bg-panel)] inline-block px-5 py-2 border border-gray-700 shadow-sm font-mono"><i class="fas fa-brain mr-2"></i> System Check</p>
+                <h2 class="font-epic text-4xl md:text-5xl font-black text-white tracking-widest mb-6 text-center uppercase">${title}</h2>
+                <p class="text-[var(--text-muted)] text-lg font-medium mb-12 text-center max-w-2xl font-inter">${instruction}</p>
+
+                <div class="w-full max-w-3xl bg-[var(--bg-paper)] p-10 mb-8 border border-gray-700 shadow-xl relative overflow-hidden">
+                    <div class="space-y-6 relative z-10">
+                        ${statements.map((s, i) => `
+                            <div class="flex flex-col md:flex-row md:items-center justify-between p-4 border-b border-gray-600 gap-4" data-answered="false" id="psych-row-${id}-${i}">
+                                <p class="text-xl font-bold text-white font-mono w-full md:w-2/3 leading-relaxed">"${s}"</p>
+                                <div class="flex gap-4 w-full md:w-auto">
+                                    <button onclick="answerPsych('${id}', ${i}, 'TRUE', this)" class="psych-btn flex-1 md:flex-none border border-gray-500 text-gray-300 bg-transparent px-6 py-2 text-sm font-bold tracking-widest font-mono uppercase transition-all hover:bg-[var(--accent-cyan)] hover:text-[var(--bg-void)] hover:border-[var(--accent-cyan)] shadow-sm">TRUE</button>
+                                    <button onclick="answerPsych('${id}', ${i}, 'FALSE', this)" class="psych-btn flex-1 md:flex-none border border-gray-500 text-gray-300 bg-transparent px-6 py-2 text-sm font-bold tracking-widest font-mono uppercase transition-all hover:bg-[var(--accent-virus)] hover:text-white hover:border-[var(--accent-virus)] shadow-sm">FALSE</button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <div id="psych-result-${id}" class="hidden w-full max-w-4xl p-8 mt-4 text-left border-l-4 border-[var(--accent-cyan)] bg-[var(--bg-panel)] shadow-sm flex-col md:flex-row gap-10 animate-in fade-in">
+                    <div class="flex-1">
+                        <p class="text-[10px] font-bold text-[var(--accent-cyan)] uppercase tracking-widest mb-6 font-mono">Operator Override</p>
+                        <div class="space-y-5">
+                            ${questions.map(q => `<p class="text-xl font-bold text-white leading-snug font-inter"><i class="fas fa-terminal text-[var(--text-muted)] mr-3 opacity-60"></i>${q}</p>`).join('')}
+                        </div>
+                    </div>
+                    <div class="flex-1 border-t md:border-t-0 md:border-l border-gray-700 pt-6 md:pt-0 md:pl-10">
+                        <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-6 font-mono">Suggested Output</p>
+                        <div class="space-y-6">
+                            ${starters.map(st => `<p class="text-xl font-bold text-[var(--accent-cyan)] font-mono">"${st}"</p>`).join('')}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `);
+
+        const bVocabMatch = (id, title, instruction, items, followUp) => {
+            let words = shuffleArray([...items]).map(w => `
+                <div class="vocab-word rounded-sm" draggable="true" ondragstart="dragVocab(event, this)" ondragend="this.classList.remove('dragging')" onclick="clickVocab(this)" data-word="${esc(w.word)}">
+                    <i class="fas fa-bug mr-2 opacity-50"></i>${w.word}
+                </div>
+            `).join('');
+
+            let dropzones = items.map((w, i) => `
+                <div class="vocab-dropzone bg-[var(--bg-paper)] border border-dashed border-gray-500 rounded-sm p-6 flex flex-col justify-between shadow-inner transition-all duration-300 min-h-[180px]" data-expected="${esc(w.word)}" ondrop="dropVocab(event, this)" ondragover="allowDropVocab(event)" ondragleave="leaveDropVocab(event)" onclick="clickDropVocab(this)">
+                    <p class="text-white font-inter font-bold text-lg text-center mb-6 leading-relaxed flex-grow flex items-center justify-center">"${w.def}"</p>
+                    <div class="drop-area w-full h-12 bg-gray-800 border border-gray-600 flex items-center justify-center transition-all duration-300">
+                        <span class="text-xs font-mono text-gray-500 uppercase tracking-widest opacity-50 pointer-events-none">Drop Data Here</span>
+                    </div>
+                </div>
+            `).join('');
+
+            return step(TYPES.VOCAB, title, `
+                <div class="max-w-5xl mx-auto w-full flex flex-col items-center py-10 animate-in fade-in" id="vocab-container-${id}">
+                    <p class="text-[10px] font-bold text-[var(--bg-void)] uppercase tracking-[0.4em] mb-4 bg-[var(--accent-cyan)] px-5 py-2 shadow-sm font-mono"><i class="fas fa-link mr-2"></i> Data Mapping</p>
+                    <h2 class="font-epic text-4xl md:text-5xl font-black text-white tracking-widest mb-4 text-center uppercase">${title}</h2>
+                    <p class="text-[var(--text-muted)] text-lg font-medium mb-10 text-center max-w-2xl font-inter">${instruction}</p>
+                    
+                    <div class="vocab-bank flex flex-wrap justify-center gap-4 mb-12 w-full max-w-4xl p-6 bg-[var(--bg-panel)] border border-gray-700 shadow-lg min-h-[80px] flex items-center justify-center">
+                        ${words}
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl">
+                        ${dropzones}
+                    </div>
+
+                    <div class="vocab-followup hidden w-full max-w-4xl mt-12 bg-[var(--bg-panel)] border-l-4 border-[var(--accent-cyan)] p-8 shadow-2xl relative overflow-hidden">
+                        <p class="text-[10px] font-bold text-[var(--accent-cyan)] uppercase tracking-widest mb-4 font-mono"><i class="fas fa-microphone-alt mr-2"></i> Voice Protocol</p>
+                        <p class="text-2xl font-bold text-white font-mono leading-relaxed">"${followUp}"</p>
+                    </div>
+                </div>
+            `);
+        };
+
+        const bSystemAlert = (title, alertType, headline, bodyText, prompt) => step(TYPES.STORY, title, `
+            <div class="max-w-4xl mx-auto flex flex-col items-center py-10 animate-in fade-in">
+                <div class="w-full bg-[var(--accent-virus)] text-white p-4 font-epic text-center text-xl font-bold tracking-widest uppercase animate-pulse border-y-4 border-red-900">${alertType}</div>
+                <div class="cyber-card w-full mt-8 border-l-8 border-[var(--accent-virus)]">
+                    <h1 class="font-epic text-4xl text-white mb-6 uppercase text-[var(--accent-virus)]">${headline}</h1>
+                    <p class="text-xl text-gray-300 font-mono leading-relaxed mb-8">${bodyText}</p>
+                    <div class="bg-red-950/30 border border-[var(--accent-virus)] p-6 mt-8">
+                        <p class="text-sm text-[var(--accent-virus)] font-bold uppercase tracking-widest mb-2 font-mono">> Action Required</p>
+                        <p class="text-xl text-white font-bold">${prompt}</p>
+                    </div>
+                </div>
+            </div>
+        `);
+
+        const bVideo = (title, videoId, instruction, start=0, end=0) => {
+            let timeStr = `?start=${start}`;
+            if(end > 0) timeStr += `&end=${end}`;
+            return step(TYPES.VIDEO, title, `
+            <div class="max-w-5xl mx-auto w-full flex flex-col items-center py-10 animate-in fade-in">
+                <p class="text-[10px] font-bold text-[var(--bg-void)] uppercase tracking-[0.4em] mb-6 border border-[var(--accent-cyan)] px-5 py-2 bg-[var(--accent-cyan)] shadow-sm font-mono"><i class="fas fa-play mr-2"></i> Neural Feed</p>
+                <h2 class="font-epic text-4xl md:text-5xl font-black text-[var(--text-main)] tracking-widest mb-8 text-center uppercase">${title}</h2>
+                <p class="text-[var(--text-muted)] text-xl font-bold mb-12 text-center max-w-2xl">${instruction}</p>
+                
+                <div class="w-full cyber-card p-4 flex flex-col items-center border-t-2 border-[var(--accent-cyan)]">
+                    <div class="w-full aspect-video bg-black border border-gray-700 shadow-xl relative overflow-hidden">
+                        <iframe class="absolute inset-0 w-full h-full" src="https://www.youtube.com/embed/${videoId}${timeStr}&rel=0" frameborder="0" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+            `);
+        };
+
+        const bDebateFlip = (title, instruction, cards) => step(TYPES.SPEAKING, title, `
+            <div class="max-w-5xl mx-auto flex flex-col items-center py-10 animate-in fade-in">
+                <p class="text-[10px] font-bold text-[var(--bg-void)] uppercase tracking-[0.4em] mb-6 bg-[var(--accent-purple)] px-5 py-2 shadow-sm font-mono"><i class="fas fa-comments mr-2"></i> Override Protocol</p>
+                <h2 class="font-epic text-4xl md:text-5xl font-black text-white tracking-widest mb-8 text-center uppercase">${title}</h2>
+                <p class="text-[var(--text-muted)] text-lg font-medium mb-12 text-center font-inter">${instruction}</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl">
+                    ${cards.map((card, idx) => `
+                        <div class="polaroid-card w-full h-[250px]" onclick="this.classList.toggle('flipped')">
+                            <div class="polaroid-inner">
+                                <div class="polaroid-front">
+                                    <i class="fas fa-lock text-4xl text-[var(--text-muted)] mb-4"></i>
+                                    <p class="font-mono text-white font-bold tracking-widest uppercase">Firewall ${idx + 1}</p>
+                                    <p class="text-xs text-[var(--accent-cyan)] mt-4 font-mono">Click to bypass</p>
+                                </div>
+                                <div class="polaroid-back">
+                                    <p class="text-xl font-mono font-bold text-white leading-relaxed p-6">"${card}"</p>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `);
+
+        const bGrammar = (title, rule, examples, tagColor="var(--accent-cyan)") => step(TYPES.GRAMMAR, title, `
+            <div class="max-w-5xl mx-auto space-y-10 animate-in fade-in py-10">
+                <div class="text-center space-y-4 mb-16">
+                    <p class="text-[10px] font-bold text-[var(--bg-void)] uppercase tracking-[0.5em] mb-4 inline-block px-5 py-2 font-mono font-bold" style="background-color: ${tagColor}">System Logic</p>
+                    <h2 class="font-epic text-4xl md:text-5xl font-black text-white tracking-widest uppercase">${title}</h2>
+                </div>
+                <div class="cyber-card mb-12 border-l-4" style="border-left-color: ${tagColor}">
+                    <p class="text-2xl text-[var(--text-main)] font-medium leading-relaxed font-inter">${rule.replace(/\[(.*?)\]/g, `<span style="color: ${tagColor}" class="font-bold">$1</span>`)}</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                    ${examples.map(ex => `
+                        <div class="bg-[var(--bg-paper)] border border-gray-700 p-8 shadow-md text-center">
+                            <p class="text-[10px] font-bold uppercase text-gray-400 tracking-widest mb-6 font-mono">> ${ex.context}</p>
+                            <p class="text-2xl font-bold text-white leading-tight font-mono">"${ex.text.replace(/\[(.*?)\]/g, `<span style="color: ${tagColor}">$1</span>`)}"</p>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `);
+
+        const bTuner = (id, title, instruction, textAff, textAlt, feedback, tagColor="var(--accent-cyan)") => step(TYPES.TUNER, title, `
+            <div class="max-w-4xl mx-auto flex flex-col items-center justify-center min-h-[60vh] text-center space-y-12 animate-in fade-in">
+                <p class="text-[10px] font-bold text-[var(--bg-void)] uppercase tracking-[0.4em] mb-2 px-5 py-2 shadow-sm font-mono" style="background-color: ${tagColor}">Mindset Shift</p>
+                <h2 class="font-epic text-4xl md:text-5xl font-black text-white tracking-widest leading-tight uppercase">${title}</h2>
+                <p class="text-xl text-[var(--text-muted)] font-bold max-w-2xl font-inter">${instruction}</p>
+                
+                <div class="w-full max-w-3xl cyber-card flex flex-col items-center py-16 border-t-2" style="border-top-color: ${tagColor}">
+                    <div class="flex items-center gap-8 mb-16">
+                        <span class="font-bold text-white tracking-widest text-lg w-32 text-right uppercase font-mono" id="mode-aff-${id}">Virus</span>
+                        <div class="relative inline-block w-24 h-8 align-middle select-none">
+                            <input type="checkbox" id="tuner-switch-${id}" class="tuner-checkbox absolute block w-6 h-6 rounded-full opacity-0 z-10 w-full h-full cursor-pointer" onchange="toggleTuner('${id}', this, '${esc(textAff)}', '${esc(textAlt)}', '${esc(feedback)}', '${tagColor}')">
+                            <label for="tuner-switch-${id}" class="tuner-label block overflow-hidden h-8 rounded-full bg-[var(--bg-paper)] border border-gray-500 cursor-pointer transition-colors duration-300">
+                                <span class="tuner-knob absolute block w-6 h-6 m-1 bg-white rounded-full transition-transform duration-300 ease-in-out shadow-sm"></span>
+                            </label>
+                        </div>
+                        <span class="font-bold text-gray-500 tracking-widest text-lg w-32 text-left uppercase font-mono" id="mode-alt-${id}">Antivirus</span>
+                    </div>
+
+                    <div class="bg-[var(--bg-void)] w-full p-10 flex items-center justify-center min-h-[140px] border border-gray-700 shadow-inner">
+                        <p id="tuner-text-${id}" class="text-2xl font-bold tracking-wide transition-opacity duration-300 font-mono text-white leading-relaxed">${textAff.replace(/\[(.*?)\]/g, `<span style="color: ${tagColor}">$1</span>`)}</p>
+                    </div>
+                    
+                    <div id="tuner-fb-${id}" class="hidden mt-10 font-bold text-lg font-mono text-gray-400">
+                        > ${feedback}
+                    </div>
+                </div>
+            </div>
+        `);
+
+        const bLieDetector = (title, statement1, statement2) => step(TYPES.DRILL, title, `
+            <div class="max-w-5xl mx-auto w-full flex flex-col items-center py-10 animate-in fade-in polygraph-container">
+                <p class="text-[10px] font-bold text-white uppercase tracking-[0.4em] mb-6 border border-gray-600 px-5 py-2 bg-[var(--bg-paper)] shadow-sm font-mono"><i class="fas fa-wave-square mr-2 text-[var(--accent-cyan)]"></i> Logic Scan</p>
+                <h2 class="font-epic text-4xl md:text-5xl font-black text-white tracking-widest mb-16 text-center uppercase">${title}</h2>
+                
+                <div id="bamb-q1" class="w-full mb-12">
+                    <div class="bg-[var(--bg-paper)] p-8 border-l-4 border-[var(--accent-cyan)] shadow-lg" id="poly-paper-1">
+                        <p class="text-2xl font-mono text-white text-center">"${statement1.text.replace(/\[(.*?)\]/g, '<span class="text-[var(--accent-cyan)]">$1</span>')}"</p>
+                    </div>
+                    <div class="flex gap-6 justify-center mt-8">
+                        <button class="btn-cyan px-10 py-3 text-lg" onclick="checkLieDetector(1, ${statement1.isTrue}, true)">TRUTH (VALID)</button>
+                        <button class="btn-virus px-10 py-3 text-lg" onclick="checkLieDetector(1, ${statement1.isTrue}, false)">LIE (INVALID)</button>
+                    </div>
+                </div>
+                
+                <div id="bamb-q2" class="hidden w-full mb-12">
+                    <div class="bg-[var(--bg-paper)] p-8 border-l-4 border-[var(--accent-purple)] shadow-lg" id="poly-paper-2">
+                        <p class="text-2xl font-mono text-white text-center">"${statement2.text.replace(/\[(.*?)\]/g, '<span class="text-[var(--accent-purple)]">$1</span>')}"</p>
+                    </div>
+                    <div class="flex gap-6 justify-center mt-8">
+                        <button class="btn-cyan px-10 py-3 text-lg" style="border-color: var(--accent-purple); color: var(--accent-purple);" onclick="checkLieDetector(2, ${statement2.isTrue}, true)">TRUTH (VALID)</button>
+                        <button class="btn-virus px-10 py-3 text-lg" onclick="checkLieDetector(2, ${statement2.isTrue}, false)">LIE (INVALID)</button>
+                    </div>
+                </div>
+                <div id="bamb-fb" class="hidden mt-4 p-4 bg-[var(--bg-paper)] text-[var(--accent-cyan)] border border-[var(--accent-cyan)] font-bold text-lg font-mono text-center shadow-lg px-12">> SYSTEM PURGED.</div>
+            </div>
+        `);
+
+        function bTypewriterBuilder(id, title, instruction, expectedArr) {
+            const expectedStr = JSON.stringify(expectedArr).replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+            let wordBtns = shuffleArray([...expectedArr]).map(w => `<span class="type-key" onclick="moveTypeWord(this, '${esc(w)}', '${id}')">${w}</span>`).join('');
+            return step(TYPES.BUILDER, title, `
+                <div class="max-w-4xl mx-auto w-full flex flex-col items-center py-10 animate-in fade-in" data-expected="${expectedStr}" id="wb-data-${id}">
+                    <p class="text-[10px] font-bold text-[var(--bg-void)] uppercase tracking-[0.4em] mb-4 bg-[var(--accent-cyan)] px-5 py-2 font-mono">Syntax Rewrite</p>
+                    <h2 class="font-epic text-4xl md:text-5xl font-black text-white tracking-widest mb-8 text-center uppercase">${title}</h2>
+                    <p class="text-[var(--text-muted)] font-medium text-xl mb-12 text-center font-inter">${instruction}</p>
+                    
+                    <div class="w-full cyber-card text-center pb-16">
+                        <div class="type-paper" id="wb-dropzone-${id}"></div>
+                        <div class="flex justify-center flex-wrap gap-4 mt-16 max-w-2xl mx-auto" id="wb-bank-${id}">
+                            ${wordBtns}
+                        </div>
+                        <button onclick="resetWb('${id}')" class="mt-16 text-xs font-bold text-gray-500 hover:text-[var(--accent-virus)] uppercase tracking-widest transition font-mono"><i class="fas fa-undo mr-2"></i>Clear Cache</button>
+                    </div>
+                    <div id="wb-fb-${id}" class="hidden mt-8 p-6 bg-[var(--bg-paper)] text-[var(--accent-cyan)] font-bold font-mono text-xl border border-[var(--accent-cyan)]/50 shadow-lg uppercase tracking-widest">> Override Accepted</div>
+                </div>
+            `);
+        }
+
+        const bRoleplay = (title, prompt, hint) => step(TYPES.SPEAKING, title, `
+            <div class="max-w-4xl mx-auto w-full flex flex-col items-center justify-center min-h-[60vh] text-center animate-in fade-in py-10 relative">
+                <div class="w-32 h-32 bg-[var(--bg-void)] border border-[var(--accent-cyan)] flex items-center justify-center mb-8 shadow-[var(--glow-cyan)]"><i class="fas fa-headset text-6xl text-[var(--accent-cyan)]"></i></div>
+                <p class="text-[10px] font-bold text-[var(--bg-void)] uppercase tracking-[0.4em] mb-4 bg-[var(--accent-cyan)] px-5 py-2 font-mono shadow-sm">Crisis Comms</p>
+                <h2 class="font-epic text-4xl md:text-5xl font-black tracking-widest text-white leading-tight mb-12 uppercase">${prompt}</h2>
+                <div class="w-full cyber-card text-left border-l-4 border-[var(--accent-cyan)]">
+                    <div class="flex justify-between items-center cursor-pointer" onclick="toggleStarter(this)">
+                        <div class="flex items-center gap-4"><i class="fas fa-lightbulb text-[var(--accent-cyan)] text-3xl"></i><span class="font-bold text-white tracking-widest uppercase text-xl font-mono">Transmission Details (Click)</span></div>
+                        <i class="fas fa-chevron-down text-gray-500"></i>
+                    </div>
+                    <div class="starter-content text-left">
+                        <div class="bg-[var(--bg-paper)] p-8 mt-6 border border-gray-600 shadow-inner">
+                            <p class="text-xl font-medium text-[var(--text-main)] leading-relaxed font-mono">"${hint}"</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `);
+
+        // NEW ROULETTE FUNCTION
+        function bQRoulette(title, instruction, questions) {
+            const qsJson = JSON.stringify(questions).replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+            return step(TYPES.SPEAKING, title, `
+                <div class="max-w-4xl mx-auto flex flex-col items-center justify-center min-h-[60vh] text-center space-y-8 animate-in fade-in">
+                    <p class="text-[10px] font-bold text-[var(--bg-void)] uppercase tracking-[0.4em] mb-2 bg-[var(--accent-purple)] px-5 py-2 font-mono">Random Matrix</p>
+                    <h2 class="font-epic text-4xl font-black text-white tracking-widest uppercase">${title}</h2>
+                    <p class="text-xl text-[var(--text-muted)] font-medium font-inter mb-8">${instruction}</p>
+                    
+                    <div class="roulette-container w-full" data-questions="${qsJson}">
+                        <div class="roulette-window" id="roulette-display">
+                            <span class="text-gray-500">> Awaiting spin command...</span>
+                        </div>
+                        <div class="roulette-overlay"></div>
+                        <button class="spin-btn" onclick="spinRoulette(this)">Execute Spin</button>
+                    </div>
+
+                    <div id="roulette-followup" class="hidden w-full max-w-2xl bg-[var(--bg-paper)] p-6 text-left border-l-4 border-[var(--accent-purple)] mt-8">
+                        <p class="text-[10px] font-bold text-[var(--accent-purple)] uppercase tracking-widest mb-2 font-mono">Target Subject:</p>
+                        <p class="text-lg text-white font-inter">What should you do in this situation? Use modals (should/must).</p>
+                    </div>
+                </div>
+            `);
+        }
+
+        const bSliderVerdict = (title, prompt, optA, optB, questions, starters) => step(TYPES.WRAP, title, `
+            <div class="max-w-5xl mx-auto flex flex-col items-center justify-center min-h-[60vh] text-center space-y-12 animate-in fade-in">
+                <p class="text-[10px] font-bold text-[var(--bg-void)] uppercase tracking-[0.4em] mb-2 bg-[var(--accent-cyan)] px-5 py-2 font-mono">The Verdict</p>
+                <h2 class="font-epic text-4xl md:text-5xl font-black text-white tracking-widest leading-tight uppercase">${prompt}</h2>
+                
+                <div class="w-full max-w-3xl cyber-card py-16 flex flex-col items-center mt-8 border-t-2 border-[var(--accent-cyan)]">
+                    <div class="flex justify-between w-full px-8 mb-12 text-4xl font-mono text-gray-500">
+                        <span class="opacity-70 hover:opacity-100 hover:text-white transition-all drop-shadow-md cursor-pointer">${optA}</span>
+                        <span class="opacity-70 hover:opacity-100 hover:text-white transition-all drop-shadow-md cursor-pointer">${optB}</span>
+                    </div>
+                    <div class="w-full px-12 relative">
+                        <input type="range" min="0" max="100" value="50" class="cute-slider">
+                    </div>
+                </div>
+
+                <div class="w-full max-w-4xl p-8 mt-8 text-left border-l-4 border-[var(--accent-cyan)] bg-[var(--bg-paper)] shadow-sm flex flex-col md:flex-row gap-10">
+                    <div class="flex-1">
+                        <p class="text-[10px] font-bold text-[var(--accent-cyan)] uppercase tracking-widest mb-6 font-mono">Discussion</p>
+                        <div class="space-y-5">
+                            ${questions.map(q => `<p class="text-xl font-bold text-white leading-snug font-inter"><i class="fas fa-angle-right text-[var(--text-muted)] mr-3 opacity-60"></i>${q}</p>`).join('')}
+                        </div>
+                    </div>
+                    <div class="flex-1 border-t md:border-t-0 md:border-l border-gray-700 pt-6 md:pt-0 md:pl-10">
+                        <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-6 font-mono">Starter</p>
+                        <div class="space-y-6">
+                            ${starters.map(s => `<p class="text-xl font-bold text-[var(--accent-cyan)] font-mono">"${s}"</p>`).join('')}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `);
+
+        const bWrap = () => step(TYPES.WRAP, "System Restored", `
+            <div class="text-center max-w-3xl mx-auto flex flex-col items-center justify-center min-h-[60vh] animate-in fade-in">
+                <div class="w-40 h-40 bg-[var(--bg-paper)] mx-auto flex items-center justify-center text-7xl text-[var(--accent-cyan)] mb-10 shadow-[var(--glow-cyan)] border border-[var(--accent-cyan)]">
+                    <i class="fas fa-shield-check"></i>
+                </div>
+                <h1 class="font-epic text-6xl md:text-8xl font-black text-white tracking-widest mb-6 uppercase">Fear Overridden</h1>
+                <p class="text-xl text-[var(--text-muted)] mb-16 font-medium font-inter">You have successfully hacked the Perfectionism virus. Go out and speak.</p>
+                <button onclick="goHome()" class="btn-cyan px-12 py-4 text-sm tracking-widest">Disconnect</button>
+            </div>
+        `);
+
+        const lessonData = [
+            bGuide("Neural Override", [
+                "Target: Hack the 'Speaking Anxiety' virus.", 
+                "Grammar: Modals of Advice (Should/Must) to self-correct.",
+                "Grammar: First Conditional to plan for mistakes.",
+                "Objective: Debate and speak as much as possible."
+            ]),
+            
+            bPsychTest("warm1", "Mental State Scan", "Before we connect to the network, we must analyze your stress response when speaking English.", 
+                ["I feel panic when native speakers listen to me.", "If I don't know a word, my brain goes blank.", "I prefer writing because I can be perfect."],
+                ["Why do you think the brain freezes under pressure?", "Do you care more about grammar or communication?"],
+                ["I think we freeze because we are afraid of...", "For me, communication is more important because..."]
+            ),
+
+            bVocabMatch("vm1", "Malware Analysis", "Match the symptoms of the virus to their definitions to understand the enemy.", [
+                {word: "Freeze", def: "When your brain stops working and you can't say anything."},
+                {word: "Blank out", def: "To completely forget a word you know."},
+                {word: "Overwhelm", def: "A feeling of too much stress or too much information at once."},
+                {word: "Fluency", def: "The ability to speak smoothly and easily without stopping."}
+            ], "Operator: Tell me about a time you blanked out. What were you trying to say?"),
+
+            bSystemAlert("Threat Detected", "System Critical", "The Perfection Virus is active", 
+                "Warning: The neural pathways for English communication are under attack. The 'Perfectionism' malware is forcing the user to focus on 100% accurate grammar, causing severe processing delays and system freezes.", 
+                "You must override the virus. Proceed to the video analysis feed."
+            ),
+
+            bVideo("Video Feed 1", "UqxoNY0Y2k8", "Watch the BBC report on Speaking Anxiety. Pay attention to the physical symptoms.", 0, 75),
+
+            bDebateFlip("The Freeze Response", "Discuss the video findings with the Operator.", [
+                "According to the video, what happens to your body when you are afraid to speak?",
+                "Do you experience the 'Fight, Flight, or Freeze' response when speaking English?"
+            ]),
+
+            bGrammar("The Antivirus (Modals)", "To fight the fear, you must use Modals of Advice to reprogram your brain. Use [Should] for good ideas, [Must] for obligations, and [Don't have to] to remove pressure.", [
+                {context: "Removing Pressure", text: "You [don't have to] speak perfectly."},
+                {context: "Reprogramming", text: "You [must] breathe and focus on the message."}
+            ], "var(--accent-cyan)"),
+
+            bTuner("tun1", "Mindset Shift 1", "Use the Modals to shift from panic to logic.", "I [must] use perfect grammar.", "I [don't have to] use perfect grammar.", "Notice: Must -> Don't have to", "var(--accent-cyan)"),
+            
+            bRoleplay("Crisis Comms", "A junior operative is freezing on a mission. Guide them using Modals.", "> Junior: 'I'm talking to the client but I forgot the vocabulary! I must be perfect! What should I do?' \n\n > You: 'Listen to me! You don't have to... You must...'"),
+
+            bVideo("Video Feed 2", "UqxoNY0Y2k8", "Watch the second part of the video. Discover the override techniques.", 76, 184),
+
+            bDebateFlip("The Override", "Discuss the solutions with the Operator.", [
+                "What does 'Feel the fear and do it anyway' mean to you?",
+                "The video says 'Focus on the other person'. Why does this help reduce anxiety?"
+            ]),
+
+            bGrammar("Logic Paths (1st Conditional)", "If you plan for errors, the virus loses its power. Use the [First Conditional] to create an action plan for when things go wrong: [If + Present], [Will + Verb].", [
+                {context: "The Bug", text: "[If] I [forget] a word..."},
+                {context: "The Fix", text: "...I [will] use a simpler word."}
+            ], "var(--accent-purple)"),
+
+            bTypewriterBuilder("wb1", "Code the Override", "Build your First Conditional defense sentence.", ["if", "I", "make", "a", "mistake", ",", "I", "will", "keep", "talking", "."]),
+
+            bLieDetector("Logic Scan", 
+                {text: "If I speak slowly, people will think I am stupid.", isTrue: false}, 
+                {text: "If I make a mistake, people will still understand me.", isTrue: true} 
+            ),
+
+            bDebateFlip("The Native Myth", "Flip the firewalls and break the myths about native speakers.", [
+                "Do you think native speakers judge you when you make a grammar mistake?",
+                "Have you ever spoken to a native speaker who made a mistake in their own language?"
+            ]),
+
+            bRoleplay("The Interview", "You are in a job interview in English. You start panicking.", "> Interviewer: 'So, tell me about your experience.' \n\n > You (in your head): 'Oh no, I'm freezing. Wait... If I freeze, I will... I should just...' (Say your strategy out loud, then answer the question)."),
+
+            bSystemAlert("Accent Detected", "Social Threat", "Accent Insecurity Spiking", 
+                "Warning: The user is worried about their accent. The system is consuming 80% of its power trying to sound like a native speaker.", 
+                "How do we fix this? Is an accent a bug or a feature?"
+            ),
+
+            bSliderVerdict("The Accent Dilemma", "Where do you stand on accents?", "Erase Accent completely", "Keep Accent, focus on Clarity", 
+                ["Should English learners try to eliminate their accents?", "What is the difference between 'Intelligibility' (being understood) and 'Perfection'?"],
+                ["I strongly believe that...", "If you focus only on your accent, you will..."]
+            ),
+
+            bTuner("tun2", "Mindset Shift 2", "Shift your focus from perfection to communication.", "If I have an accent, I [will] fail.", "If I am clear, I [will] succeed.", "Notice: Focus on clarity.", "var(--accent-purple)"),
+
+            bQRoulette("The Stress Matrix", "Spin the wheel to get a random stressful situation. Answer using Modals.", [
+                "You are presenting a project and forget a word. What should you do?",
+                "Someone didn't understand your accent. What should you do?",
+                "You are in a group of native speakers talking very fast. What must you do?",
+                "You realize you used the wrong verb tense. What should you do?"
+            ]),
+
+            bRoleplay("The Phone Call", "Phone calls are the ultimate test (no body language). Roleplay a difficult call.", "> Operator: 'Hello, this is Tech Support. I need you to explain the complex issue you are having with your neural link.' \n\n > You: (Explain a fake problem. If you freeze, use your override techniques)."),
+
+            bDebateFlip("Redefining Success", "Final philosophical checks before we reboot the system.", [
+                "What does 'Fluency' actually mean to you? Is it speed, or is it connection?",
+                "If you could give one piece of advice to a beginner who is terrified of speaking, what would it be?"
+            ]),
+
+            bTypewriterBuilder("wb2", "Final Command", "Lock in your new mindset.", ["I", "don't", "have", "to", "be", "perfect", ",", "I", "must", "communicate", "."]),
+
+            bSliderVerdict("System Reboot", "What is your primary goal now?", "Perfect Grammar", "Fearless Communication", 
+                ["Do you feel more prepared to speak English now?", "How will you handle your anxiety tomorrow?"],
+                ["From now on, if I feel afraid, I will...", "I know I should..."]
+            ),
+
+            bWrap()
+        ];
+
+        function toggleElementClass(id, action, className) {
+            const el = document.getElementById(id);
+            if (el) {
+                if (action === 'add') el.classList.add(className);
+                else if (action === 'remove') el.classList.remove(className);
+            }
+        }
+
+        function startMission() {
+            toggleElementClass('dashboard', 'add', 'hidden'); toggleElementClass('dashboard', 'remove', 'flex');
+            toggleElementClass('hud-top', 'remove', 'hidden'); toggleElementClass('hud-top', 'add', 'flex');
+            toggleElementClass('mission-arena', 'remove', 'hidden'); toggleElementClass('mission-arena', 'add', 'flex');
+            toggleElementClass('nav-console', 'remove', 'hidden'); toggleElementClass('nav-console', 'add', 'flex');
+            buildLessonNavigator(); renderStep();
+        }
+
+        function goHome() {
+            toggleElementClass('dashboard', 'remove', 'hidden'); toggleElementClass('dashboard', 'add', 'flex');
+            toggleElementClass('hud-top', 'add', 'hidden'); toggleElementClass('hud-top', 'remove', 'flex');
+            toggleElementClass('mission-arena', 'add', 'hidden'); toggleElementClass('mission-arena', 'remove', 'flex');
+            toggleElementClass('nav-console', 'add', 'hidden'); toggleElementClass('nav-console', 'remove', 'flex');
+            state.current = 0; updateHUD();
+            document.getElementById('lesson-navigator')?.classList.remove('active');
+            document.getElementById('teacher-hud')?.classList.remove('active');
+            document.getElementById('whiteboard')?.classList.remove('active');
+        }
+
+        function renderStep() {
+            if (!lessonData || !lessonData[state.current]) return;
+            const step = lessonData[state.current];
+            const sCount = document.getElementById('console-counter'); if(sCount) sCount.innerText = `NODE ${String(state.current + 1).padStart(2, '0')}/${lessonData.length}`;
+            const content = document.getElementById('mission-content'); if(content) content.innerHTML = `<div class="w-full max-w-7xl mx-auto">${step.html}</div>`;
+            
+            // Trigger virus aesthetic on slide 4 (index 3)
+            if(state.current === 3) document.body.classList.add('immersive-shift');
+            else document.body.classList.remove('immersive-shift');
+
+            updateHUD();
+            
+            const navList = document.getElementById('nav-steps-list');
+            if (navList) {
+                Array.from(navList.children).forEach((btn, i) => {
+                    if(i === state.current) { btn.classList.add('bg-[var(--bg-paper)]', 'text-[var(--accent-cyan)]', 'border-l-4', 'border-[var(--accent-cyan)]'); btn.classList.remove('text-gray-400'); } 
+                    else { btn.classList.remove('bg-[var(--bg-paper)]', 'text-[var(--accent-cyan)]', 'border-l-4', 'border-[var(--accent-cyan)]'); btn.classList.add('text-gray-400'); }
+                });
+            }
+            if (step.type === TYPES.BUILDER) setTimeout(setupWb, 100);
+        }
+
+        function nextStep() { if (state.current < lessonData.length - 1) { state.current++; renderStep(); } else { goHome(); } }
+        function prevStep() { if (state.current > 0) { state.current--; renderStep(); } }
+        
+        function toggleLessonNavigator() { document.getElementById('lesson-navigator').classList.toggle('active'); document.getElementById('teacher-hud')?.classList.remove('active'); document.getElementById('whiteboard')?.classList.remove('active');}
+        function toggleTeacherHUD() { document.getElementById('teacher-hud').classList.toggle('active'); document.getElementById('lesson-navigator')?.classList.remove('active'); document.getElementById('whiteboard')?.classList.remove('active');}
+        function toggleWhiteboard() { document.getElementById('whiteboard').classList.toggle('active'); document.getElementById('lesson-navigator')?.classList.remove('active'); document.getElementById('teacher-hud')?.classList.remove('active');}
+        function toggleFullscreen() { if (!document.fullscreenElement) { document.documentElement.requestFullscreen().catch(err => console.log(err)); } else { if (document.exitFullscreen) document.exitFullscreen(); } }
+        
+        function toggleStarter(btn) { 
+            const content = btn.nextElementSibling; 
+            if (content.classList.contains('open')) { content.classList.remove('open'); } 
+            else { content.classList.add('open'); } 
+        }
+
+        function answerPsych(id, rowIdx, answer, btn) {
+            const row = document.getElementById(`psych-row-${id}-${rowIdx}`);
+            const btns = row.querySelectorAll('.psych-btn');
+            btns.forEach(b => { b.classList.remove('bg-[var(--accent-cyan)]', 'text-[var(--bg-void)]', 'border-[var(--accent-cyan)]', 'bg-[var(--accent-virus)]', 'border-[var(--accent-virus)]', 'text-white'); b.classList.add('text-gray-300', 'border-gray-500', 'bg-transparent'); });
+            btn.classList.remove('text-gray-300', 'border-gray-500', 'bg-transparent');
+            if (answer === 'TRUE') { btn.classList.add('bg-[var(--accent-cyan)]', 'text-[var(--bg-void)]', 'border-[var(--accent-cyan)]'); } 
+            else { btn.classList.add('bg-[var(--accent-virus)]', 'text-white', 'border-[var(--accent-virus)]'); }
+            if (row.dataset.answered === "false") { row.dataset.answered = "true"; state.xp += 2; updateHUD(); }
+            const container = document.getElementById(`psych-container-${id}`);
+            const allRows = container.querySelectorAll('[id^="psych-row-"]');
+            if(Array.from(allRows).every(r => r.dataset.answered === "true")) {
+                const result = document.getElementById(`psych-result-${id}`);
+                if(result.classList.contains('hidden')) { result.classList.remove('hidden'); result.classList.add('flex'); shootConfetti(); }
+            }
+        }
+
+        let activeVocabWord = null;
+        function dragVocab(e, el) { e.dataTransfer.setData('text', el.dataset.word); el.classList.add('dragging'); }
+        function allowDropVocab(e) { e.preventDefault(); e.currentTarget.classList.add('drag-over'); }
+        function leaveDropVocab(e) { e.currentTarget.classList.remove('drag-over'); }
+        function dropVocab(e, zone) { e.preventDefault(); zone.classList.remove('drag-over'); const word = e.dataTransfer.getData('text'); if(word) checkVocabMatch(word, zone); }
+        function clickVocab(el) {
+            if(el.classList.contains('matched-word')) return;
+            if(activeVocabWord) activeVocabWord.classList.remove('ring-2', 'ring-[var(--accent-cyan)]', 'scale-105');
+            activeVocabWord = el; el.classList.add('ring-2', 'ring-[var(--accent-cyan)]', 'scale-105');
+        }
+        function clickDropVocab(zone) { if(activeVocabWord) { checkVocabMatch(activeVocabWord.dataset.word, zone); } }
+        function checkVocabMatch(wordStr, zone) {
+            const expected = zone.dataset.expected;
+            if(zone.querySelector('.matched-word')) return;
+            if(wordStr === expected) {
+                const wordEl = document.querySelector(`.vocab-word[data-word="${wordStr}"]`);
+                if(!wordEl) return;
+                const dropArea = zone.querySelector('.drop-area'); dropArea.innerHTML = ''; 
+                wordEl.classList.remove('ring-2', 'ring-[var(--accent-cyan)]', 'scale-105', 'bg-[var(--bg-void)]', 'border-gray-500', 'text-white');
+                wordEl.classList.add('matched-word', 'bg-[var(--bg-panel)]', 'text-[var(--accent-cyan)]', 'border-none', 'w-full', 'h-full', 'm-0', 'shadow-none', 'flex', 'items-center', 'justify-center', 'text-xl');
+                wordEl.draggable = false; wordEl.onclick = null;
+                dropArea.appendChild(wordEl); dropArea.classList.replace('border-gray-600', 'border-[var(--accent-cyan)]');
+                zone.classList.add('border-[var(--accent-cyan)]');
+                activeVocabWord = null; state.xp += 3; updateHUD(); shootConfetti();
+                const containerId = zone.closest('[id^="vocab-container-"]').id;
+                const container = document.getElementById(containerId);
+                const bank = container.querySelector('.vocab-bank');
+                if(bank.children.length === 0 || container.querySelectorAll('.matched-word').length === container.querySelectorAll('.vocab-dropzone').length) {
+                    const followup = container.querySelector('.vocab-followup');
+                    followup.classList.remove('hidden'); followup.classList.add('animate-in', 'fade-in');
+                }
+            } else {
+                zone.classList.add('shake', 'border-[var(--accent-virus)]'); state.hp -= 10; updateHUD();
+                setTimeout(() => zone.classList.remove('shake', 'border-[var(--accent-virus)]'), 400);
+                if(activeVocabWord) { activeVocabWord.classList.remove('ring-2', 'ring-[var(--accent-cyan)]', 'scale-105'); activeVocabWord = null; }
+            }
+        }
+
+        // ROULETTE LOGIC
+        let isSpinning = false;
+        function spinRoulette(btn) {
+            if (isSpinning) return;
+            isSpinning = true;
+            const container = btn.closest('.roulette-container');
+            const questions = JSON.parse(container.getAttribute('data-questions'));
+            const display = document.getElementById('roulette-display');
+            
+            // Generate list of items to spin through
+            display.innerHTML = '';
+            let spinList = [];
+            for(let i=0; i<15; i++) { spinList.push(questions[Math.floor(Math.random() * questions.length)]); }
+            const finalQ = questions[Math.floor(Math.random() * questions.length)];
+            spinList.push(finalQ);
+
+            const innerBox = document.createElement('div');
+            innerBox.className = 'roulette-text';
+            innerBox.style.top = '0px';
+            
+            spinList.forEach(q => {
+                const el = document.createElement('div');
+                el.style.height = '120px';
+                el.style.display = 'flex';
+                el.style.alignItems = 'center';
+                el.style.justifyContent = 'center';
+                el.innerText = q;
+                innerBox.appendChild(el);
+            });
+            display.appendChild(innerBox);
+
+            let currentTop = 0;
+            const targetTop = -((spinList.length - 1) * 120);
+            
+            // Animation loop
+            const duration = 2000;
+            const startTime = performance.now();
+            
+            function easeOutQuart(x) { return 1 - Math.pow(1 - x, 4); }
+
+            function animateSpin(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                const ease = easeOutQuart(progress);
+                innerBox.style.top = (targetTop * ease) + 'px';
+
+                if (progress < 1) {
+                    requestAnimationFrame(animateSpin);
+                } else {
+                    isSpinning = false;
+                    document.getElementById('roulette-followup').classList.remove('hidden');
+                    state.xp += 5; updateHUD(); shootConfetti();
+                }
+            }
+            requestAnimationFrame(animateSpin);
+        }
+
+        function toggleTuner(id, checkbox, textAff, textAlt, feedback, tagColor) {
+            const textEl = document.getElementById(`tuner-text-${id}`);
+            const aff = document.getElementById(`mode-aff-${id}`); const alt = document.getElementById(`mode-alt-${id}`);
+            textEl.style.opacity = 0;
+            setTimeout(() => {
+                if(checkbox.checked) {
+                    aff.classList.replace('text-white', 'text-gray-500'); alt.classList.replace('text-gray-500', 'text-white');
+                    textEl.innerHTML = textAlt.replace(/\[(.*?)\]/g, `<span style="color: ${tagColor}">$1</span>`); 
+                    document.getElementById(`tuner-fb-${id}`).classList.remove('hidden');
+                } else {
+                    aff.classList.replace('text-gray-500', 'text-white'); alt.classList.replace('text-white', 'text-gray-500');
+                    textEl.innerHTML = textAff.replace(/\[(.*?)\]/g, `<span style="color: ${tagColor}">$1</span>`); 
+                    document.getElementById(`tuner-fb-${id}`).classList.add('hidden');
+                }
+                textEl.style.opacity = 1;
+            }, 200);
+        }
+
+        let wbState = {};
+        function setupWb() { document.querySelectorAll('[id^="wb-data-"]').forEach(el => { const id = el.id.replace('wb-data-', ''); wbState[id] = { current: [], expected: JSON.parse(el.getAttribute('data-expected')) }; }); }
+        function moveTypeWord(pill, word, id) {
+            if(pill.classList.contains('used') || !wbState[id]) return;
+            wbState[id].current.push(word); pill.classList.add('used');
+            const dz = document.getElementById(`wb-dropzone-${id}`);
+            const newPill = document.createElement('span'); newPill.className = 'type-word'; 
+            newPill.innerText = word + (wbState[id].current.length === wbState[id].expected.length || word === '.' || word === ',' ? '' : ' '); 
+            dz.appendChild(newPill);
+            if(wbState[id].current.length === wbState[id].expected.length) {
+                if(wbState[id].current.every((val, index) => val === wbState[id].expected[index])) { document.getElementById(`wb-fb-${id}`).classList.remove('hidden'); updateHUD(); shootConfetti(); }
+                else { dz.parentElement.classList.add('shake', 'border-[var(--accent-virus)]'); setTimeout(() => dz.parentElement.classList.remove('shake', 'border-[var(--accent-virus)]'), 400); }
+            }
+        }
+        function resetWb(id) {
+            if(!wbState[id]) return;
+            wbState[id].current = []; document.getElementById(`wb-dropzone-${id}`).innerHTML = ''; document.getElementById(`wb-fb-${id}`).classList.add('hidden');
+            document.getElementById(`wb-bank-${id}`).querySelectorAll('.type-key').forEach(p => p.classList.remove('used'));
+        }
+
+        function checkLieDetector(q, isTrueStatement, isSayingTruth) {
+            const paper = document.getElementById(`poly-paper-${q}`);
+            if(isSayingTruth === isTrueStatement) {
+                paper.classList.add('bg-cyan-900/30', 'border-[var(--accent-cyan)]');
+                if(q === 1) document.getElementById('bamb-q2').classList.remove('hidden');
+                else { document.getElementById('bamb-fb').classList.remove('hidden'); shootConfetti(); }
+            } else {
+                paper.classList.add('bg-red-900/30', 'border-[var(--accent-virus)]'); paper.parentElement.classList.add('shake');
+                setTimeout(() => { paper.parentElement.classList.remove('shake'); paper.classList.remove('bg-red-900/30', 'border-[var(--accent-virus)]'); }, 1000);
+            }
+        }
+
+        function shuffleArray(array) {
+            let curId = array.length;
+            while (0 !== curId) { let randId = Math.floor(Math.random() * curId); curId -= 1; let tmp = array[curId]; array[curId] = array[randId]; array[randId] = tmp; }
+            return array;
+        }
+
+        function buildLessonNavigator() {
+            const list = document.getElementById('nav-steps-list'); if (!list) return; list.innerHTML = '';
+            lessonData.forEach((step, i) => {
+                const btn = document.createElement('button');
+                btn.className = `w-full text-left p-3 rounded-sm flex items-center gap-3 transition-all font-mono text-sm ${i === state.current ? 'bg-[var(--bg-paper)] text-[var(--accent-cyan)] font-bold border-l-4 border-[var(--accent-cyan)] shadow-sm' : 'text-gray-400 hover:bg-gray-800'}`;
+                btn.innerHTML = `<span class="w-6 opacity-50 font-bold">${i+1}</span><div class="flex flex-col truncate"><span class="truncate">${step.title}</span></div>`;
+                btn.onclick = () => { state.current = i; renderStep(); toggleLessonNavigator(); };
+                list.appendChild(btn);
+            });
+        }
+
+        function triggerPraise(main, sub) {
+            document.getElementById('teacher-hud')?.classList.remove('active'); 
+            const overlay = document.getElementById('praise-overlay'); const card = document.getElementById('praise-card');
+            document.getElementById('praise-main').className = "font-epic text-5xl md:text-7xl font-black tracking-widest uppercase mb-4 drop-shadow-md " + (main === 'SYSTEM PURGED' ? "text-[var(--accent-purple)]" : "text-[var(--accent-cyan)]");
+            document.getElementById('praise-main').innerText = main; document.getElementById('praise-sub').innerText = sub;
+            overlay.classList.remove('opacity-0', 'pointer-events-none');
+            setTimeout(() => card.classList.replace('scale-50', 'scale-100'), 50); shootConfetti();
+            setTimeout(() => { card.classList.replace('scale-100', 'scale-50'); overlay.classList.add('opacity-0', 'pointer-events-none'); }, 2500);
+        }
+
+        function shootConfetti() {
+            const cCanvas = document.getElementById('confetti-canvas'); const cCtx = cCanvas.getContext('2d');
+            cCanvas.width = window.innerWidth; cCanvas.height = window.innerHeight;
+            const pieces = []; const colors = ['#06b6d4', '#e11d48', '#a855f7', '#ffffff'];
+            for(let i=0; i<60; i++) pieces.push({ x: cCanvas.width/2, y: cCanvas.height/2+100, vx: (Math.random()-0.5)*20, vy: (Math.random()-1)*20-5, size: Math.random()*8+4, color: colors[Math.floor(Math.random()*colors.length)], rot: Math.random()*360, rotSpeed: (Math.random()-0.5)*10 });
+            function animateC() {
+                cCtx.clearRect(0, 0, cCanvas.width, cCanvas.height); let active = false;
+                pieces.forEach(p => {
+                    p.x += p.vx; p.y += p.vy; p.vy += 0.5; p.rot += p.rotSpeed; if(p.y < cCanvas.height) active = true;
+                    cCtx.save(); cCtx.translate(p.x, p.y); cCtx.rotate(p.rot*Math.PI/180); cCtx.fillStyle = p.color; 
+                    cCtx.fillRect(-p.size/2, -p.size/2, p.size, p.size); cCtx.restore();
+                });
+                if(active) requestAnimationFrame(animateC); else cCtx.clearRect(0, 0, cCanvas.width, cCanvas.height);
+            }
+            animateC();
+        }
+        
+        window.onload = () => { updateHUD(); buildLessonNavigator(); goHome(); };
+    </script>
+</body>
+</html>
